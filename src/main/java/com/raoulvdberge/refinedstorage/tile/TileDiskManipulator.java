@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
@@ -114,7 +115,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         private int lastState;
 
         public ItemStorage(ItemStack disk) {
-            super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskManipulator.this);
+            super(disk.getTagCompound(), API.instance().getDiskRegistry().getDiskCapacity(disk), TileDiskManipulator.this);
 
             lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
         }
@@ -160,7 +161,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         private int lastState;
 
         public FluidStorage(ItemStack disk) {
-            super(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskManipulator.this);
+            super(disk.getTagCompound(), API.instance().getDiskRegistry().getDiskCapacity(disk), TileDiskManipulator.this);
 
             lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
         }

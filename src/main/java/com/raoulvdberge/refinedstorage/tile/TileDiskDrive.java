@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
@@ -44,7 +45,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         private int lastState;
 
         public ItemStorage(ItemStack disk) {
-            super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
+            super(disk.getTagCompound(), API.instance().getDiskRegistry().getDiskCapacity(disk), TileDiskDrive.this);
 
             lastState = getDiskState(getStored(), getCapacity());
         }
@@ -93,7 +94,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         private int lastState;
 
         public FluidStorage(ItemStack disk) {
-            super(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
+            super(disk.getTagCompound(), API.instance().getDiskRegistry().getDiskCapacity(disk), TileDiskDrive.this);
 
             lastState = getDiskState(getStored(), getCapacity());
         }
@@ -508,7 +509,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             ItemStack disk = disks.getStackInSlot(i);
 
             if (disk != null) {
-                stored += disk.getItem() == RSItems.STORAGE_DISK ? ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) : FluidStorageNBT.getStoredFromNBT(disk.getTagCompound());
+                stored += API.instance().getDiskRegistry().getStored(disk);
             }
         }
 
@@ -523,7 +524,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             ItemStack disk = disks.getStackInSlot(i);
 
             if (disk != null) {
-                int diskCapacity = disk.getItem() == RSItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
+                int diskCapacity = API.instance().getDiskRegistry().getDiskCapacity(disk);
 
                 if (diskCapacity == -1) {
                     return -1;

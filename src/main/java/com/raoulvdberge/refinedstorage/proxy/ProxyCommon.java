@@ -88,6 +88,9 @@ public class ProxyCommon {
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerRedstone.ID, tag -> new ReaderWriterHandlerRedstone());
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerForgeEnergy.ID, ReaderWriterHandlerForgeEnergy::new);
 
+        API.instance().getDiskRegistry().registerDisk(RSItems.STORAGE_DISK, stack -> EnumItemStorageType.getByItemStack(stack).getCapacity());
+        API.instance().getDiskRegistry().registerDisk(RSItems.FLUID_STORAGE_DISK, stack -> EnumFluidStorageType.getByItemStack(stack).getCapacity());
+
         API.instance().getConnectableConditions().add(tile -> tile instanceof INetworkMaster || tile instanceof INetworkNode);
 
         if (IntegrationTesla.isLoaded()) {

@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
+import com.raoulvdberge.refinedstorage.api.storage.IDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
@@ -59,6 +60,12 @@ public interface IRSAPI {
      */
     @Nonnull
     IReaderWriterHandlerRegistry getReaderWriterHandlerRegistry();
+
+    /**
+     * @return the registry for disks
+     */
+    @Nonnull
+    IDiskRegistry getDiskRegistry();
 
     /**
      * @return a new reader writer channel

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
 import net.minecraft.client.resources.I18n;
@@ -98,7 +99,7 @@ public class ItemFluidStorageDisk extends ItemBase {
     @Override
     public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
         if (FluidStorageNBT.isValid(disk)) {
-            int capacity = EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
+            int capacity = API.instance().getDiskRegistry().getDiskCapacity(disk);
 
             if (capacity == -1) {
                 tooltip.add(I18n.format("misc.refinedstorage:storage.stored", FluidStorageNBT.getStoredFromNBT(disk.getTagCompound())));

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.fluid;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.storage.IDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
@@ -23,11 +24,6 @@ public abstract class FluidStorageNBT implements IFluidStorage {
      */
     private static final int PROTOCOL = 1;
 
-    private static final String NBT_PROTOCOL = "Protocol";
-
-    private static final String NBT_FLUIDS = "Fluids";
-    private static final String NBT_STORED = "Stored";
-
     private NBTTagCompound tag;
     private int capacity;
     private TileEntity tile;
@@ -48,7 +44,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     }
 
     private void readFromNBT() {
-        NBTTagList list = (NBTTagList) tag.getTag(NBT_FLUIDS);
+        NBTTagList list = (NBTTagList) tag.getTag(IDiskRegistry.NBT_FLUIDS);
 
         for (int i = 0; i < list.tagCount(); ++i) {
             FluidStack stack = FluidStack.loadFluidStackFromNBT(list.getCompoundTagAt(i));
@@ -69,8 +65,8 @@ public abstract class FluidStorageNBT implements IFluidStorage {
             list.appendTag(stack.writeToNBT(new NBTTagCompound()));
         }
 
-        tag.setTag(NBT_FLUIDS, list);
-        tag.setInteger(NBT_PROTOCOL, PROTOCOL);
+        tag.setTag(IDiskRegistry.NBT_FLUIDS, list);
+        tag.setInteger(IDiskRegistry.NBT_PROTOCOL, PROTOCOL);
     }
 
     @Override
@@ -90,7 +86,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
                     }
 
                     if (!simulate) {
-                        tag.setInteger(NBT_STORED, getStored() + remainingSpace);
+                        tag.setInteger(IDiskRegistry.NBT_STORED, getStored() + remainingSpace);
 
                         otherStack.amount += remainingSpace;
 
@@ -100,7 +96,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
                     return RSUtils.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
-                        tag.setInteger(NBT_STORED, getStored() + size);
+                        tag.setInteger(IDiskRegistry.NBT_STORED, getStored() + size);
 
                         otherStack.amount += size;
 
@@ -120,7 +116,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
             }
 
             if (!simulate) {
-                tag.setInteger(NBT_STORED, getStored() + remainingSpace);
+                tag.setInteger(IDiskRegistry.NBT_STORED, getStored() + remainingSpace);
 
                 stacks.add(RSUtils.copyStackWithSize(stack, remainingSpace));
 
@@ -130,7 +126,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
             return RSUtils.copyStackWithSize(stack, size - remainingSpace);
         } else {
             if (!simulate) {
-                tag.setInteger(NBT_STORED, getStored() + size);
+                tag.setInteger(IDiskRegistry.NBT_STORED, getStored() + size);
 
                 stacks.add(RSUtils.copyStackWithSize(stack, size));
 
@@ -156,7 +152,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
                         otherStack.amount -= size;
                     }
 
-                    tag.setInteger(NBT_STORED, getStored() - size);
+                    tag.setInteger(IDiskRegistry.NBT_STORED, getStored() - size);
 
                     onStorageChanged();
                 }
@@ -192,15 +188,15 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     }
 
     public static int getStoredFromNBT(NBTTagCompound tag) {
-        return tag.getInteger(NBT_STORED);
+        return tag.getInteger(IDiskRegistry.NBT_STORED);
     }
 
     public static NBTTagCompound getNBTShareTag(NBTTagCompound tag) {
         NBTTagCompound otherTag = new NBTTagCompound();
 
-        otherTag.setInteger(NBT_STORED, getStoredFromNBT(tag));
-        otherTag.setTag(NBT_FLUIDS, new NBTTagList());
-        otherTag.setInteger(NBT_PROTOCOL, PROTOCOL);
+        otherTag.setInteger(IDiskRegistry.NBT_STORED, getStoredFromNBT(tag));
+        otherTag.setTag(IDiskRegistry.NBT_FLUIDS, new NBTTagList());
+        otherTag.setInteger(IDiskRegistry.NBT_PROTOCOL, PROTOCOL);
 
         return otherTag;
     }
@@ -211,15 +207,15 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     public static NBTTagCompound createNBT() {
         NBTTagCompound tag = new NBTTagCompound();
 
-        tag.setTag(NBT_FLUIDS, new NBTTagList());
-        tag.setInteger(NBT_STORED, 0);
-        tag.setInteger(NBT_PROTOCOL, PROTOCOL);
+        tag.setTag(IDiskRegistry.NBT_FLUIDS, new NBTTagList());
+        tag.setInteger(IDiskRegistry.NBT_STORED, 0);
+        tag.setInteger(IDiskRegistry.NBT_PROTOCOL, PROTOCOL);
 
         return tag;
     }
 
     public static boolean isValid(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_FLUIDS) && stack.getTagCompound().hasKey(NBT_STORED);
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(IDiskRegistry.NBT_FLUIDS) && stack.getTagCompound().hasKey(IDiskRegistry.NBT_STORED);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 
 public enum EnumFluidStorageType implements IStringSerializable {
@@ -45,5 +46,9 @@ public enum EnumFluidStorageType implements IStringSerializable {
         }
 
         return TYPE_CREATIVE;
+    }
+
+    public static EnumFluidStorageType getByItemStack(ItemStack stack) {
+        return getById(stack.getMetadata());
     }
 }

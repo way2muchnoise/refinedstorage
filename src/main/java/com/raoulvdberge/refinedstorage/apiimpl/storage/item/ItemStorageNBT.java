@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.item;
 
+import com.raoulvdberge.refinedstorage.api.storage.IDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.Item;
@@ -22,11 +23,6 @@ public abstract class ItemStorageNBT implements IItemStorage {
      * safe backwards compatibility breaks.
      */
     private static final int PROTOCOL = 1;
-
-    private static final String NBT_PROTOCOL = "Protocol";
-
-    private static final String NBT_ITEMS = "Items";
-    private static final String NBT_STORED = "Stored";
 
     private static final String NBT_ITEM_TYPE = "Type";
     private static final String NBT_ITEM_QUANTITY = "Quantity";
@@ -54,7 +50,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     private void readFromNBT() {
-        NBTTagList list = (NBTTagList) tag.getTag(NBT_ITEMS);
+        NBTTagList list = (NBTTagList) tag.getTag(IDiskRegistry.NBT_ITEMS);
 
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound tag = list.getCompoundTagAt(i);
@@ -112,8 +108,8 @@ public abstract class ItemStorageNBT implements IItemStorage {
             list.appendTag(itemTag);
         }
 
-        tag.setTag(NBT_ITEMS, list);
-        tag.setInteger(NBT_PROTOCOL, PROTOCOL);
+        tag.setTag(IDiskRegistry.NBT_ITEMS, list);
+        tag.setInteger(IDiskRegistry.NBT_PROTOCOL, PROTOCOL);
     }
 
     @Override
@@ -133,7 +129,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
                     }
 
                     if (!simulate) {
-                        tag.setInteger(NBT_STORED, getStored() + remainingSpace);
+                        tag.setInteger(IDiskRegistry.NBT_STORED, getStored() + remainingSpace);
 
                         otherStack.stackSize += remainingSpace;
 
@@ -143,7 +139,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
                     return ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
-                        tag.setInteger(NBT_STORED, getStored() + size);
+                        tag.setInteger(IDiskRegistry.NBT_STORED, getStored() + size);
 
                         otherStack.stackSize += size;
 
@@ -163,7 +159,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
             }
 
             if (!simulate) {
-                tag.setInteger(NBT_STORED, getStored() + remainingSpace);
+                tag.setInteger(IDiskRegistry.NBT_STORED, getStored() + remainingSpace);
 
                 stacks.add(safeCopy(stack, remainingSpace));
 
@@ -173,7 +169,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
             return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
         } else {
             if (!simulate) {
-                tag.setInteger(NBT_STORED, getStored() + size);
+                tag.setInteger(IDiskRegistry.NBT_STORED, getStored() + size);
 
                 stacks.add(safeCopy(stack, size));
 
@@ -199,7 +195,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
                         otherStack.stackSize -= size;
                     }
 
-                    tag.setInteger(NBT_STORED, getStored() - size);
+                    tag.setInteger(IDiskRegistry.NBT_STORED, getStored() - size);
 
                     onStorageChanged();
                 }
@@ -235,15 +231,15 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     public static int getStoredFromNBT(NBTTagCompound tag) {
-        return tag.getInteger(NBT_STORED);
+        return tag.getInteger(IDiskRegistry.NBT_STORED);
     }
 
     public static NBTTagCompound getNBTShareTag(NBTTagCompound tag) {
         NBTTagCompound otherTag = new NBTTagCompound();
 
-        otherTag.setInteger(NBT_STORED, getStoredFromNBT(tag));
-        otherTag.setTag(NBT_ITEMS, new NBTTagList());
-        otherTag.setInteger(NBT_PROTOCOL, PROTOCOL);
+        otherTag.setInteger(IDiskRegistry.NBT_STORED, getStoredFromNBT(tag));
+        otherTag.setTag(IDiskRegistry.NBT_ITEMS, new NBTTagList());
+        otherTag.setInteger(IDiskRegistry.NBT_PROTOCOL, PROTOCOL);
 
         return otherTag;
     }
@@ -254,15 +250,15 @@ public abstract class ItemStorageNBT implements IItemStorage {
     public static NBTTagCompound createNBT() {
         NBTTagCompound tag = new NBTTagCompound();
 
-        tag.setTag(NBT_ITEMS, new NBTTagList());
-        tag.setInteger(NBT_STORED, 0);
-        tag.setInteger(NBT_PROTOCOL, PROTOCOL);
+        tag.setTag(IDiskRegistry.NBT_ITEMS, new NBTTagList());
+        tag.setInteger(IDiskRegistry.NBT_STORED, 0);
+        tag.setInteger(IDiskRegistry.NBT_PROTOCOL, PROTOCOL);
 
         return tag;
     }
 
     public static boolean isValid(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ITEMS) && stack.getTagCompound().hasKey(NBT_STORED);
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(IDiskRegistry.NBT_ITEMS) && stack.getTagCompound().hasKey(IDiskRegistry.NBT_STORED);
     }
 
     /**

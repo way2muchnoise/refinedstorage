@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
+import com.raoulvdberge.refinedstorage.api.storage.IDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
@@ -20,6 +21,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTas
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.DiskRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.FluidStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
@@ -43,6 +45,7 @@ public class API implements IRSAPI {
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
     private ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
     private IReaderWriterHandlerRegistry readerWriterHandlerRegistry = new ReaderWriterHandlerRegistry();
+    private IDiskRegistry diskRegistry = new DiskRegistry();
     private Set<Predicate<TileEntity>> connectableConditions = new HashSet<>();
 
     @Nonnull
@@ -79,6 +82,12 @@ public class API implements IRSAPI {
     @Override
     public IReaderWriterHandlerRegistry getReaderWriterHandlerRegistry() {
         return readerWriterHandlerRegistry;
+    }
+
+    @Nonnull
+    @Override
+    public IDiskRegistry getDiskRegistry() {
+        return diskRegistry;
     }
 
     @Nonnull
